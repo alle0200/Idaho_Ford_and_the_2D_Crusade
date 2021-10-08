@@ -415,6 +415,7 @@ MonoBehaviour:
   playerRigidbody: {fileID: 1822577524}
   speed: 400
   maxVelocity: 0.05
+  jumpForce: {x: 0, y: 700}
 --- !u!50 &1822577524
 Rigidbody2D:
   serializedVersion: 4
@@ -428,10 +429,10 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
+  m_LinearDrag: 1
   m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_GravityScale: 3
+  m_Material: {fileID: 6200000, guid: 926405c1bedfd48e49cc191fae99123f, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0

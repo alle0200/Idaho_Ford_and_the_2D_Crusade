@@ -8,9 +8,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Rigidbody2D playerRigidbody;
     [SerializeField] private float speed = 1;
     [SerializeField] private float maxVelocity = 5;
+    [SerializeField] private Vector2 jumpForce;
 
     private float horizontalMovement = 0f;
     private Vector3 currentVelocity = Vector3.zero;
+    private bool isJumping = false;
+    private bool isGrounded = true;
     
     // Start is called before the first frame update
 
@@ -32,6 +35,8 @@ public class PlayerMovement : MonoBehaviour
         // MoveHorizontal();
         
         // Debug.Log(playerRigidbody.velocity);
+        
+        Jump();
     }
 
     void FixedUpdate()
@@ -53,6 +58,17 @@ public class PlayerMovement : MonoBehaviour
         // }
         
         Move();
+
+        Collider2D[] colliders = new Collider2D[100];
+        int numberOfContacts = playerRigidbody.GetContacts(colliders);
+        isGrounded = numberOfContacts > 0;
+
+        if (isGrounded && isJumping)
+        {
+            playerRigidbody.AddForce(jumpForce);
+            isGrounded = false;
+            isJumping = false;
+        }
     }
 
     private void Move()
@@ -66,7 +82,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void Jump()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
+        {
+            isJumping = true;
+        }
     }
 
     private void Crouch()

@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D playerRigidbody;
+    [SerializeField] private BoxCollider2D playerHitbox;
     [SerializeField] private float speed = 1;
     [SerializeField] private float maxVelocity = 5;
     [SerializeField] private Vector2 jumpForce;
@@ -14,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 currentVelocity = Vector3.zero;
     private bool isJumping = false;
     private bool isGrounded = true;
+    private bool isCrouching = false;
     
     // Start is called before the first frame update
 
@@ -37,6 +39,8 @@ public class PlayerMovement : MonoBehaviour
         // Debug.Log(playerRigidbody.velocity);
         
         Jump();
+        Crouch();
+        OnDrawGizmos();
     }
 
     void FixedUpdate()
@@ -90,6 +94,29 @@ public class PlayerMovement : MonoBehaviour
 
     private void Crouch()
     {
-        
+        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+        {
+            playerHitbox.enabled = false;
+            isCrouching = true;
+        }
+
+        else
+        {
+            Debug.Log("Not Crouching");
+            playerHitbox.enabled = true;
+            isCrouching = false;
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (playerHitbox.enabled)
+        {
+            Gizmos.color = Color.green;
+            Vector3 hitboxCenter = new Vector3(playerHitbox.transform.position.x, playerHitbox.transform.position.y, 0);
+            Vector3 hitboxSize =
+                new Vector3(playerHitbox.transform.localScale.x, playerHitbox.transform.localScale.y, 0);
+            Gizmos.DrawCube(hitboxCenter, hitboxSize);
+        }
     }
 }

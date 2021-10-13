@@ -5,9 +5,12 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [SerializeField] private Transform CeilingCheck;
+    [SerializeField] private float checkRadius;
     [SerializeField] private Rigidbody2D playerRigidbody;
     [SerializeField] private BoxCollider2D playerHitbox;
     [SerializeField] private float speed = 1;
+    [SerializeField] private float crouchSpeed = 0.75f;
     [SerializeField] private float maxVelocity = 5;
     [SerializeField] private Vector2 jumpForce;
 
@@ -16,12 +19,18 @@ public class PlayerMovement : MonoBehaviour
     private bool isJumping = false;
     private bool isGrounded = true;
     private bool isCrouching = false;
+    private bool canPhase = false;
+    
+    private LayerMask ceilingLayerMask;
+    // private LayerMask groundLayerMask;
+    // private LayerMask invisibleLayerMask;
     
     // Start is called before the first frame update
 
     void Awake()
     {
         playerRigidbody = GetComponent<Rigidbody2D>();
+        ceilingLayerMask = ~(1 << 3);
     }
 
     void Start()
@@ -40,7 +49,7 @@ public class PlayerMovement : MonoBehaviour
         
         Jump();
         Crouch();
-        OnDrawGizmos();
+        Invisible();
     }
 
     void FixedUpdate()
@@ -77,7 +86,15 @@ public class PlayerMovement : MonoBehaviour
 
     private void Move()
     {
-        horizontalMovement = Input.GetAxisRaw("Horizontal") * speed * Time.fixedDeltaTime;
+        if (isCrouching)
+        {
+            horizontalMovement = Input.GetAxisRaw("Horizontal") * speed * Time.fixedDeltaTime * crouchSpeed;
+        }
+
+        else
+        {
+            horizontalMovement = Input.GetAxisRaw("Horizontal") * speed * Time.fixedDeltaTime;
+        }
 
         Vector3 targetVelocity = new Vector3(horizontalMovement, playerRigidbody.velocity.y);
         playerRigidbody.velocity =
@@ -94,7 +111,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Crouch()
     {
-        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Physics2D.OverlapCircle(CeilingCheck.position, checkRadius, ceilingLayerMask))
         {
             playerHitbox.enabled = false;
             isCrouching = true;
@@ -102,21 +119,45 @@ public class PlayerMovement : MonoBehaviour
 
         else
         {
-            Debug.Log("Not Crouching");
-            playerHitbox.enabled = true;
-            isCrouching = false;
+            // Debug.Log("Not Crouching");
+                playerHitbox.enabled = true;
+                isCrouching = false;
+        }
+    }
+
+    private void Invisible()
+    {
+        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        {
+            Debug.Log("Invisible");
+            Physics2D.IgnoreLayerCollision(3, 6, true);
+            ceilingLayerMask = ~((1 << 3) | (1 << 6));
+        }
+
+        else
+        {
+            Debug.Log("Not Invisible");
+            Physics2D.IgnoreLayerCollision(3, 6, false);
+            ceilingLayerMask = ~(1 << 3);
         }
     }
 
     private void OnDrawGizmos()
     {
+        Vector3 hitboxCenter = new Vector3(transform.position.x, transform.position.y + (playerHitbox.offset.y * 2), 0);
+        Vector3 hitboxSize =
+            new Vector3(playerHitbox.size.x, playerHitbox.size.y * transform.localScale.y, 0);
+        
         if (playerHitbox.enabled)
         {
             Gizmos.color = Color.green;
-            Vector3 hitboxCenter = new Vector3(playerHitbox.transform.position.x, playerHitbox.transform.position.y, 0);
-            Vector3 hitboxSize =
-                new Vector3(playerHitbox.transform.localScale.x, playerHitbox.transform.localScale.y, 0);
-            Gizmos.DrawCube(hitboxCenter, hitboxSize);
         }
+
+        else
+        {
+            Gizmos.color = Color.clear;
+        }
+        
+        Gizmos.DrawCube(hitboxCenter, hitboxSize);
     }
 }

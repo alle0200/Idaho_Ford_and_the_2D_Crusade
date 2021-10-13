@@ -153,11 +153,32 @@ public class PlayerMovement : MonoBehaviour
                 transitionColor = Color.Lerp(GetComponent<SpriteRenderer>().color, ghostColor, ghostColorTransTime);
                 ghostColorTransTime += colorTransIncrement * Time.deltaTime;
                 GetComponent<SpriteRenderer>().color = transitionColor;
+                
+                ghostSlider.GetComponent<GhostPowerSlider>().DecrementSlider();
+            }
+        
+
+            else
+            {
+                isInvisible = false;
+            
+                ghostColorTransTime = 0;
+                Debug.Log("Not Invisible");
+                Physics2D.IgnoreLayerCollision(3, 6, false);
+                ceilingLayerMask = ~(1 << 3);
+            
+                transitionColor = Color.Lerp(GetComponent<SpriteRenderer>().color, solidColor, solidColorTransTime);
+                solidColorTransTime += colorTransIncrement * Time.deltaTime;
+                GetComponent<SpriteRenderer>().color = transitionColor;
+            
+                ghostSlider.GetComponent<GhostPowerSlider>().IncrementSlider();
             }
         }
 
         else
         {
+            //!!!!make the insides here a seperate method so the code doesn't repeat!!!!
+            
             isInvisible = false;
             
             ghostColorTransTime = 0;
@@ -168,6 +189,11 @@ public class PlayerMovement : MonoBehaviour
             transitionColor = Color.Lerp(GetComponent<SpriteRenderer>().color, solidColor, solidColorTransTime);
             solidColorTransTime += colorTransIncrement * Time.deltaTime;
             GetComponent<SpriteRenderer>().color = transitionColor;
+
+            if (Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.LeftShift))
+            {
+                ghostSlider.GetComponent<GhostPowerSlider>().IncrementSlider();
+            }
         }
     }
 

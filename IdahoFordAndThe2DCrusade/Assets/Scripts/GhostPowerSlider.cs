@@ -28,17 +28,19 @@ public class GhostPowerSlider : MonoBehaviour
 
     public void IncrementSlider()
     {
-        if (player.GetComponent<PlayerMovement>().GetVisibility() == true && GetComponent<Slider>().value > 0)
+        Debug.Log("in increment slider");
+        
+        if (player.GetComponent<PlayerMovement>().GetVisibility() == false && GetComponent<Slider>().value < 1)
         {
-            GetComponent<Slider>().value -= decrementValue * Time.deltaTime;
+            GetComponent<Slider>().value += incrementValue * Time.deltaTime;
         }
     }
 
     public void DecrementSlider()
     {
-        if (player.GetComponent<PlayerMovement>().GetVisibility() == false && GetComponent<Slider>().value < 1)
+        if (player.GetComponent<PlayerMovement>().GetVisibility() == true && GetComponent<Slider>().value > 0)
         {
-            GetComponent<Slider>().value += incrementValue * Time.deltaTime;
+            GetComponent<Slider>().value -= decrementValue * Time.deltaTime;
         }
     }
     

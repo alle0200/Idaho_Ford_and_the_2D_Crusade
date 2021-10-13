@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -20,6 +21,17 @@ public class PlayerMovement : MonoBehaviour
     private bool isGrounded = true;
     private bool isCrouching = false;
     private bool canPhase = false;
+    private bool isInvisible = false;
+
+    [SerializeField] private Slider ghostSlider;
+    
+    private Color ghostColor = new Color(1, 1, 1, 0.5f);
+    private Color solidColor = new Color(1, 1, 1, 1);
+    private Color transitionColor;
+    // private float colorVelocity = 0f;
+    [SerializeField] private float ghostColorTransTime = 0f;
+    [SerializeField] private float solidColorTransTime = 0f;
+    [SerializeField] private float colorTransIncrement = 0.2f;
     
     private LayerMask ceilingLayerMask;
     // private LayerMask groundLayerMask;
@@ -127,18 +139,35 @@ public class PlayerMovement : MonoBehaviour
 
     private void Invisible()
     {
-        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        if (ghostSlider.value > 0)
         {
-            Debug.Log("Invisible");
-            Physics2D.IgnoreLayerCollision(3, 6, true);
-            ceilingLayerMask = ~((1 << 3) | (1 << 6));
+            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+            {
+                isInvisible = true;
+            
+                solidColorTransTime = 0;
+                Debug.Log("Invisible");
+                Physics2D.IgnoreLayerCollision(3, 6, true);
+                ceilingLayerMask = ~((1 << 3) | (1 << 6));
+
+                transitionColor = Color.Lerp(GetComponent<SpriteRenderer>().color, ghostColor, ghostColorTransTime);
+                ghostColorTransTime += colorTransIncrement * Time.deltaTime;
+                GetComponent<SpriteRenderer>().color = transitionColor;
+            }
         }
 
         else
         {
+            isInvisible = false;
+            
+            ghostColorTransTime = 0;
             Debug.Log("Not Invisible");
             Physics2D.IgnoreLayerCollision(3, 6, false);
             ceilingLayerMask = ~(1 << 3);
+            
+            transitionColor = Color.Lerp(GetComponent<SpriteRenderer>().color, solidColor, solidColorTransTime);
+            solidColorTransTime += colorTransIncrement * Time.deltaTime;
+            GetComponent<SpriteRenderer>().color = transitionColor;
         }
     }
 
@@ -159,5 +188,10 @@ public class PlayerMovement : MonoBehaviour
         }
         
         Gizmos.DrawCube(hitboxCenter, hitboxSize);
+    }
+
+    public bool GetVisibility()
+    {
+        return isInvisible;
     }
 }

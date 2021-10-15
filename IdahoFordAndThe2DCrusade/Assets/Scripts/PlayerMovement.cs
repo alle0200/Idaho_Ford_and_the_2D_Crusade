@@ -6,7 +6,8 @@ using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private Transform CeilingCheck;
+    // [SerializeField] private Transform CeilingCheck;
+    // [SerializeField] private Transform FloorCheck;
     [SerializeField] private float checkRadius;
     [SerializeField] private Rigidbody2D playerRigidbody;
     [SerializeField] private BoxCollider2D playerHitbox;
@@ -34,15 +35,21 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float colorTransIncrement = 0.2f;
     
     private LayerMask ceilingLayerMask;
-    // private LayerMask groundLayerMask;
-    // private LayerMask invisibleLayerMask;
-    
+    private LayerMask floorLayerMask;
+
+    [SerializeField] Transform topRightCornerFloorCheck;
+    [SerializeField] Transform bottomLeftCornerFloorCheck;
+
+    [SerializeField] private Transform topRightCornerCeilingCheck;
+    [SerializeField] private Transform bottomLeftCornerCeilingCheck;
+
     // Start is called before the first frame update
 
     void Awake()
     {
         playerRigidbody = GetComponent<Rigidbody2D>();
         ceilingLayerMask = ~(1 << 3);
+        floorLayerMask = ~(1 << 3);
     }
 
     void Start()
@@ -66,27 +73,20 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        // if (Input.GetKey(KeyCode.LeftArrow))
-        // {
-        //     if (Math.Abs(playerRigidbody.velocity.x) <= maxVelocity)
-        //     {
-        //         playerRigidbody.AddForce(Vector2.left * speed * Time.fixedDeltaTime);
-        //     }
-        // }
-        //
-        // if (Input.GetKey(KeyCode.RightArrow))
-        // {
-        //     if (Math.Abs(playerRigidbody.velocity.x) <= maxVelocity)
-        //     {
-        //         playerRigidbody.AddForce(Vector2.right * speed * Time.fixedDeltaTime);
-        //     }
-        // }
-        
         Move();
 
-        Collider2D[] colliders = new Collider2D[100];
-        int numberOfContacts = playerRigidbody.GetContacts(colliders);
-        isGrounded = numberOfContacts > 0;
+        // Replace this code so that you can use FloorCheck instead
+        // will make it to where only the bottom of the player can check for floor
+        
+        // Collider2D[] colliders = new Collider2D[100];
+        // int numberOfContacts = playerRigidbody.GetContacts(colliders);
+        // isGrounded = numberOfContacts > 0;
+
+        if (Physics2D.OverlapArea(topRightCornerFloorCheck.position, bottomLeftCornerFloorCheck.position, floorLayerMask))
+        {
+            isGrounded = true;
+        }
+        
 
         if (isGrounded && isJumping)
         {
@@ -123,7 +123,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Crouch()
     {
-        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Physics2D.OverlapCircle(CeilingCheck.position, checkRadius, ceilingLayerMask))
+        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Physics2D.OverlapArea(topRightCornerCeilingCheck.position, bottomLeftCornerCeilingCheck.position, ceilingLayerMask) && isGrounded)
         {
             playerHitbox.enabled = false;
             isCrouching = true;
@@ -132,9 +132,37 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             // Debug.Log("Not Crouching");
-                playerHitbox.enabled = true;
-                isCrouching = false;
+            playerHitbox.enabled = true;
+            isCrouching = false;
         }
+    }
+
+    private void MakeInvisible()
+    {
+        isInvisible = true;
+            
+        solidColorTransTime = 0;
+        Debug.Log("Invisible");
+        Physics2D.IgnoreLayerCollision(3, 6, true);
+        ceilingLayerMask = ~((1 << 3) | (1 << 6));
+
+        transitionColor = Color.Lerp(GetComponent<SpriteRenderer>().color, ghostColor, ghostColorTransTime);
+        ghostColorTransTime += colorTransIncrement * Time.deltaTime;
+        GetComponent<SpriteRenderer>().color = transitionColor;
+    }
+
+    private void MakeVisible()
+    {
+        isInvisible = false;
+            
+        ghostColorTransTime = 0;
+        Debug.Log("Not Invisible");
+        Physics2D.IgnoreLayerCollision(3, 6, false);
+        ceilingLayerMask = ~(1 << 3);
+            
+        transitionColor = Color.Lerp(GetComponent<SpriteRenderer>().color, solidColor, solidColorTransTime);
+        solidColorTransTime += colorTransIncrement * Time.deltaTime;
+        GetComponent<SpriteRenderer>().color = transitionColor;
     }
 
     private void Invisible()
@@ -143,58 +171,31 @@ public class PlayerMovement : MonoBehaviour
         {
             if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
             {
-                isInvisible = true;
-            
-                solidColorTransTime = 0;
-                Debug.Log("Invisible");
-                Physics2D.IgnoreLayerCollision(3, 6, true);
-                ceilingLayerMask = ~((1 << 3) | (1 << 6));
-
-                transitionColor = Color.Lerp(GetComponent<SpriteRenderer>().color, ghostColor, ghostColorTransTime);
-                ghostColorTransTime += colorTransIncrement * Time.deltaTime;
-                GetComponent<SpriteRenderer>().color = transitionColor;
-                
+                MakeInvisible();
                 ghostSlider.GetComponent<GhostPowerSlider>().DecrementSlider();
             }
-        
 
             else
             {
-                isInvisible = false;
-            
-                ghostColorTransTime = 0;
-                Debug.Log("Not Invisible");
-                Physics2D.IgnoreLayerCollision(3, 6, false);
-                ceilingLayerMask = ~(1 << 3);
-            
-                transitionColor = Color.Lerp(GetComponent<SpriteRenderer>().color, solidColor, solidColorTransTime);
-                solidColorTransTime += colorTransIncrement * Time.deltaTime;
-                GetComponent<SpriteRenderer>().color = transitionColor;
-            
+                MakeVisible();
                 ghostSlider.GetComponent<GhostPowerSlider>().IncrementSlider();
             }
         }
 
         else
         {
-            //!!!!make the insides here a seperate method so the code doesn't repeat!!!!
-            
-            isInvisible = false;
-            
-            ghostColorTransTime = 0;
-            Debug.Log("Not Invisible");
-            Physics2D.IgnoreLayerCollision(3, 6, false);
-            ceilingLayerMask = ~(1 << 3);
-            
-            transitionColor = Color.Lerp(GetComponent<SpriteRenderer>().color, solidColor, solidColorTransTime);
-            solidColorTransTime += colorTransIncrement * Time.deltaTime;
-            GetComponent<SpriteRenderer>().color = transitionColor;
+            MakeVisible();
 
             if (Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.LeftShift))
             {
                 ghostSlider.GetComponent<GhostPowerSlider>().IncrementSlider();
             }
         }
+    }
+    
+    public bool GetVisibility()
+    {
+        return isInvisible;
     }
 
     private void OnDrawGizmos()
@@ -214,10 +215,13 @@ public class PlayerMovement : MonoBehaviour
         }
         
         Gizmos.DrawCube(hitboxCenter, hitboxSize);
-    }
-
-    public bool GetVisibility()
-    {
-        return isInvisible;
+        
+        Gizmos.color = Color.red;
+        
+        Gizmos.DrawLine(topRightCornerFloorCheck.position, bottomLeftCornerFloorCheck.position);
+        
+        Gizmos.color = Color.cyan;
+        
+        Gizmos.DrawLine(topRightCornerCeilingCheck.position, bottomLeftCornerCeilingCheck.position);
     }
 }

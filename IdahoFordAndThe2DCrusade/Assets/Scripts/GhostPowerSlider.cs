@@ -28,7 +28,7 @@ public class GhostPowerSlider : MonoBehaviour
 
     public void IncrementSlider()
     {
-        Debug.Log("in increment slider");
+        // Debug.Log("in increment slider");
         
         if (player.GetComponent<PlayerMovement>().GetVisibility() == false && GetComponent<Slider>().value < 1)
         {

@@ -6,7 +6,7 @@ using UnityEngine;
 public class GroundEnemy : Enemy
 {
     [SerializeField] private float raycastDistance;
-    private LayerMask enemyLayerMask = ~(1 << 7);
+    private LayerMask enemyLayerMask = ~((1 << 7) | (1 << 3));
     [SerializeField] private Transform enemyPitSensor;
     [SerializeField] private float detectionRadius;
     [SerializeField] private float maxVelocity;
@@ -32,7 +32,8 @@ public class GroundEnemy : Enemy
 
     public override void Attack(Transform player)
     {
-        
+        // player = this.player;
+        // transform.position = Vector3.Lerp(transform.position, player.position, Time.deltaTime * moveSpeed);
     }
 
     public override void Move()
@@ -42,9 +43,7 @@ public class GroundEnemy : Enemy
         float horizontalMovement = XDirection * Time.fixedDeltaTime * moveSpeed;
         
         EnemyRaycast();
-        
-        // enemyRigidbody.AddForce((base.movingRight ? Vector2.right : Vector2.left) * Time.fixedDeltaTime * moveSpeed);
-        
+
         Vector3 targetVelocity = new Vector3(horizontalMovement, enemyRigidbody.velocity.y);
         enemyRigidbody.velocity =
             Vector3.SmoothDamp(enemyRigidbody.velocity, targetVelocity, ref currentVelocity, maxVelocity);
@@ -55,21 +54,11 @@ public class GroundEnemy : Enemy
         Vector2 raycastDirection = movingRight ? Vector2.right : Vector2.left;
         
 
-        RaycastHit2D raycastResult = Physics2D.Raycast(transform.position, raycastDirection, raycastDistance, enemyLayerMask);
-        
-        if (raycastResult.collider != null)
+        RaycastHit2D objectRaycast = Physics2D.Raycast(transform.position, raycastDirection, raycastDistance, enemyLayerMask);
+
+        if (objectRaycast.collider != null)
         {
-            if (raycastResult.collider.name == "Player")
-            {
-                // Attack(player);
-            
-                Debug.Log("I see the player!");
-            }
-        
-            else
-            {
-                TurnAround();
-            }
+            TurnAround();
         }
 
         if (!Physics2D.OverlapCircle(enemyPitSensor.position, detectionRadius, enemyLayerMask))
@@ -83,11 +72,10 @@ public class GroundEnemy : Enemy
     {
         base.TurnAround();
         
-        float pitSensorX = -1 * enemyPitSensor.localPosition.x;
-        enemyPitSensor.localPosition = new Vector3(pitSensorX, enemyPitSensor.localPosition.y, 0);
+        // float pitSensorX = -1 * enemyPitSensor.localPosition.x;
+        // enemyPitSensor.localPosition = new Vector3(pitSensorX, enemyPitSensor.localPosition.y, 0);
     }
     
-
     private void OnDrawGizmos()
     {
         Vector3 raycastDirection = movingRight ? Vector3.right : Vector3.left;

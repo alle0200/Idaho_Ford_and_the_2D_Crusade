@@ -18,7 +18,6 @@ public class PlayerMovement : MonoBehaviour
     private bool isJumping = false;
     private bool isGrounded = true;
     private bool isCrouching = false;
-    private bool canPhase = false;
     private bool isInvisible = false;
 
     [SerializeField] private Slider ghostSlider;
@@ -26,9 +25,8 @@ public class PlayerMovement : MonoBehaviour
     private Color ghostColor = new Color(1, 1, 1, 0.5f);
     private Color solidColor = new Color(1, 1, 1, 1);
     private Color transitionColor;
-    // private float colorVelocity = 0f;
-    [SerializeField] private float ghostColorTransTime = 0f;
-    [SerializeField] private float solidColorTransTime = 0f;
+    private float ghostColorTransTime = 0f;
+    private float solidColorTransTime = 0f;
     [SerializeField] private float colorTransIncrement = 0.2f;
     
     private LayerMask ceilingLayerMask;
@@ -40,13 +38,15 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform topRightCornerCeilingCheck;
     [SerializeField] private Transform bottomLeftCornerCeilingCheck;
 
+    [SerializeField] private float iFrames;
+
     // Start is called before the first frame update
 
     void Awake()
     {
         playerRigidbody = GetComponent<Rigidbody2D>();
-        ceilingLayerMask = ~(1 << 3);
-        floorLayerMask = ~(1 << 3);
+        ceilingLayerMask = ~((1 << 3) | (1 << 7));
+        floorLayerMask = ~((1 << 3) | (1 << 7));
     }
 
     void Start()
@@ -145,6 +145,7 @@ public class PlayerMovement : MonoBehaviour
         solidColorTransTime = 0;
         Debug.Log("Invisible");
         Physics2D.IgnoreLayerCollision(3, 6, true);
+        // Physics2D.IgnoreLayerCollision(3, 7, true);
         ceilingLayerMask = ~((1 << 3) | (1 << 6));
 
         transitionColor = Color.Lerp(GetComponent<SpriteRenderer>().color, ghostColor, ghostColorTransTime);
@@ -159,6 +160,7 @@ public class PlayerMovement : MonoBehaviour
         ghostColorTransTime = 0;
         Debug.Log("Not Invisible");
         Physics2D.IgnoreLayerCollision(3, 6, false);
+        // Physics2D.IgnoreLayerCollision(3, 7, false);
         ceilingLayerMask = ~(1 << 3);
             
         transitionColor = Color.Lerp(GetComponent<SpriteRenderer>().color, solidColor, solidColorTransTime);
@@ -178,7 +180,10 @@ public class PlayerMovement : MonoBehaviour
 
             else
             {
-                MakeVisible();
+                if (GetComponent<SpriteRenderer>().color != solidColor)
+                {
+                    MakeVisible();
+                }
                 ghostSlider.GetComponent<GhostPowerSlider>().IncrementSlider();
             }
         }
@@ -197,6 +202,29 @@ public class PlayerMovement : MonoBehaviour
     public bool GetVisibility()
     {
         return isInvisible;
+    }
+
+    private void OnCollisionStay2D(Collision2D other)
+    {
+        if (other.gameObject.tag == "Enemy")
+        {
+            GetComponent<SpriteRenderer>().color = Color.red;
+            solidColorTransTime = 0;
+            StartCoroutine(PlayerDamaged());
+        }
+    }
+
+    IEnumerator PlayerDamaged()
+    {
+        // GetComponent<SpriteRenderer>().color = Color.Lerp(solidColor, Color.red, Mathf.PingPong(Time.time, 1));
+        
+        Physics2D.IgnoreLayerCollision(3, 7, true);
+        
+        yield return new WaitForSeconds(iFrames);
+        
+        Physics2D.IgnoreLayerCollision(3, 7, false);
+
+        yield return null;
     }
 
     private void OnDrawGizmos()

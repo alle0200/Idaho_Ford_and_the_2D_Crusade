@@ -29,9 +29,20 @@ public abstract class Enemy : MonoBehaviour
     public virtual void TurnAround()
     {
         movingRight = !movingRight;
-        GetComponent<SpriteRenderer>().flipX = movingRight;
+        Vector3 enemyScale = transform.localScale;
+        enemyScale.x *= -1;
+        transform.localScale = enemyScale;
         
         Debug.Log("I'm turning around");
     }
-    
+
+    public bool GetMovingRight()
+    {
+        return movingRight;
+    }
+
+    public Transform getPlayerPosition()
+    {
+        return player;
+    }
 }

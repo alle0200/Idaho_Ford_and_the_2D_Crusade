@@ -6,9 +6,6 @@ using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
-    // [SerializeField] private Transform CeilingCheck;
-    // [SerializeField] private Transform FloorCheck;
-    [SerializeField] private float checkRadius;
     [SerializeField] private Rigidbody2D playerRigidbody;
     [SerializeField] private BoxCollider2D playerHitbox;
     [SerializeField] private float speed = 1;
@@ -82,6 +79,10 @@ public class PlayerMovement : MonoBehaviour
         // int numberOfContacts = playerRigidbody.GetContacts(colliders);
         // isGrounded = numberOfContacts > 0;
 
+        // Issue: if a player phases through a wall, becomes invisible inside of the wall,
+        // and then jumps, they can jump when they shouldn't be able to.
+        // May need to mess with layer masks
+        
         if (Physics2D.OverlapArea(topRightCornerFloorCheck.position, bottomLeftCornerFloorCheck.position, floorLayerMask))
         {
             isGrounded = true;

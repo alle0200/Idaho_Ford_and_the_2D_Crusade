@@ -38,7 +38,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform topRightCornerCeilingCheck;
     [SerializeField] private Transform bottomLeftCornerCeilingCheck;
 
-    [SerializeField] private float iFrames;
+    [SerializeField] private float enemyIFrames;
+    [SerializeField] private float invisibilityIFrames;
+
+    private bool invincibilityCoroutineStarted = false;
+    private bool enemyCoroutineStarted = false;
 
     // Start is called before the first frame update
 
@@ -172,9 +176,15 @@ public class PlayerMovement : MonoBehaviour
     {
         if (ghostSlider.value > 0)
         {
+            StopCoroutine(InvisibilityDamage());
+            invincibilityCoroutineStarted = false;
+            
             if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
             {
-                MakeInvisible();
+                if (GetComponent<SpriteRenderer>().color != ghostColor)
+                {
+                    MakeInvisible();
+                }
                 ghostSlider.GetComponent<GhostPowerSlider>().DecrementSlider();
             }
 
@@ -192,37 +202,79 @@ public class PlayerMovement : MonoBehaviour
         {
             MakeVisible();
 
+            if (invincibilityCoroutineStarted != true)
+            {
+                StartCoroutine(InvisibilityDamage());
+                invincibilityCoroutineStarted = true;
+            }
+            
+
             if (Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.LeftShift))
             {
+                StopCoroutine(InvisibilityDamage());
+                invincibilityCoroutineStarted = false;
+                
                 ghostSlider.GetComponent<GhostPowerSlider>().IncrementSlider();
             }
         }
     }
-    
+
+    IEnumerator InvisibilityDamage()
+    {
+        while (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        {
+            MakeRed();
+            
+            GetComponent<HealthBar>().LoseHealth();
+
+            yield return new WaitForSeconds(invisibilityIFrames);
+        }
+    }
+
     public bool GetVisibility()
     {
         return isInvisible;
     }
 
-    private void OnCollisionStay2D(Collision2D other)
+    private void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.tag == "Enemy")
         {
-            GetComponent<SpriteRenderer>().color = Color.red;
-            solidColorTransTime = 0;
-            StartCoroutine(PlayerDamaged());
+            // Issue: if the enemy coroutine stops when a player is inside an enemy, they take double damage.
+            // This is no doubt due to the two colliders that make up the player.
+            // By using a bool to block off the number of coroutines started this problem is sort of fixed,
+            // but the player's character kind of clips through the enemy when they take damage.
+            // Not ideal, but it's at least functional for now.
+            if (enemyCoroutineStarted != true)
+            {
+                enemyCoroutineStarted = true;
+                StartCoroutine(EnemyDamage());
+            }
         }
     }
 
-    IEnumerator PlayerDamaged()
+    private void MakeRed()
+    {
+        GetComponent<SpriteRenderer>().color = Color.red;
+        solidColorTransTime = 0;
+        ghostColorTransTime = 0;
+    }
+
+    IEnumerator EnemyDamage()
     {
         // GetComponent<SpriteRenderer>().color = Color.Lerp(solidColor, Color.red, Mathf.PingPong(Time.time, 1));
         
         Physics2D.IgnoreLayerCollision(3, 7, true);
         
-        yield return new WaitForSeconds(iFrames);
+        MakeRed();
+        
+        GetComponent<HealthBar>().LoseHealth();
+
+        yield return new WaitForSeconds(enemyIFrames);
         
         Physics2D.IgnoreLayerCollision(3, 7, false);
+
+        enemyCoroutineStarted = false;
 
         yield return null;
     }

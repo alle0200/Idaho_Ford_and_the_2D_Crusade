@@ -43,5 +43,10 @@ public class GhostPowerSlider : MonoBehaviour
             GetComponent<Slider>().value -= decrementValue * Time.deltaTime;
         }
     }
+
+    // public void DecrementByValue(float value)
+    // {
+    //     GetComponent<Slider>().value -= value;
+    // }
     
 }

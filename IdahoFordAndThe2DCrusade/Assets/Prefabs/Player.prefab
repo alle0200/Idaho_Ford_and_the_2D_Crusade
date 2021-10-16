@@ -74,9 +74,10 @@ GameObject:
   - component: {fileID: 6703434615464091650}
   - component: {fileID: 6703434615464091654}
   - component: {fileID: 6703434615464091649}
+  - component: {fileID: 1822577520}
   m_Layer: 3
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -233,13 +234,31 @@ MonoBehaviour:
   maxVelocity: 0.05
   jumpForce: {x: 0, y: 720}
   ghostSlider: {fileID: 0}
-  ghostColorTransTime: 0
-  solidColorTransTime: 0
   colorTransIncrement: 0.3
   topRightCornerFloorCheck: {fileID: 6703434614903957898}
   bottomLeftCornerFloorCheck: {fileID: 6703434615267649609}
   topRightCornerCeilingCheck: {fileID: 6703434615633884034}
   bottomLeftCornerCeilingCheck: {fileID: 6703434616070268972}
+  enemyIFrames: 1.5
+  invisibilityIFrames: 3
+--- !u!114 &1822577520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6703434615464091677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9b9419f8372846558908f204746aa34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthBar:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  health: 4
 --- !u!1 &6703434615633884061
 GameObject:
   m_ObjectHideFlags: 0

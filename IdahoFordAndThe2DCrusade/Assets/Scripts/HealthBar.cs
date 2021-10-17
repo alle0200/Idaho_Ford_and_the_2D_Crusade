@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HealthBar : MonoBehaviour
+public class HealthBar : Player
 {
     [SerializeField] public GameObject[] healthBar;
-    [SerializeField] private int health = 4;
+    // [SerializeField] private int health = 4;
     
     // Start is called before the first frame update
     void Start()

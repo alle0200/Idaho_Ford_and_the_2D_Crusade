@@ -30,12 +30,6 @@ public class GroundEnemy : Enemy
         Move();
     }
 
-    public override void Attack(Transform player)
-    {
-        // player = this.player;
-        // transform.position = Vector3.Lerp(transform.position, player.position, Time.deltaTime * moveSpeed);
-    }
-
     public override void Move()
     {
         float XDirection = movingRight ? 1 : -1;

@@ -22,8 +22,6 @@ public abstract class Enemy : MonoBehaviour
         
     }
 
-    public abstract void Attack(Transform player);
-
     public abstract void Move();
 
     public virtual void TurnAround()
@@ -41,7 +39,7 @@ public abstract class Enemy : MonoBehaviour
         return movingRight;
     }
 
-    public Transform getPlayerPosition()
+    public Transform GetPlayerPosition()
     {
         return player;
     }

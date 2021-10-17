@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : Player
 {
     [SerializeField] private Rigidbody2D playerRigidbody;
     [SerializeField] private BoxCollider2D playerHitbox;
@@ -149,8 +149,9 @@ public class PlayerMovement : MonoBehaviour
         solidColorTransTime = 0;
         Debug.Log("Invisible");
         Physics2D.IgnoreLayerCollision(3, 6, true);
-        // Physics2D.IgnoreLayerCollision(3, 7, true);
+        Physics2D.IgnoreLayerCollision(3, 7, true);
         ceilingLayerMask = ~((1 << 3) | (1 << 6));
+        floorLayerMask = ceilingLayerMask;
 
         transitionColor = Color.Lerp(GetComponent<SpriteRenderer>().color, ghostColor, ghostColorTransTime);
         ghostColorTransTime += colorTransIncrement * Time.deltaTime;
@@ -164,8 +165,9 @@ public class PlayerMovement : MonoBehaviour
         ghostColorTransTime = 0;
         Debug.Log("Not Invisible");
         Physics2D.IgnoreLayerCollision(3, 6, false);
-        // Physics2D.IgnoreLayerCollision(3, 7, false);
+        Physics2D.IgnoreLayerCollision(3, 7, false);
         ceilingLayerMask = ~(1 << 3);
+        floorLayerMask = ceilingLayerMask;
             
         transitionColor = Color.Lerp(GetComponent<SpriteRenderer>().color, solidColor, solidColorTransTime);
         solidColorTransTime += colorTransIncrement * Time.deltaTime;

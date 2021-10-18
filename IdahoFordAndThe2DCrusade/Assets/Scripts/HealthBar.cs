@@ -24,7 +24,7 @@ public class HealthBar : MonoBehaviour
     {
         if (health <= 0)
         {
-            Debug.Log("Game Over!");
+            // Debug.Log("Game Over!");
             GetComponent<PlayerLives>().DecrementLives();
 
             health = 4;
@@ -45,12 +45,19 @@ public class HealthBar : MonoBehaviour
         }
     }
 
-    public void GainHealth()
+    public void GainHealth(int amount)
     {
-        if (health < 4)
+        health += amount;
+        
+        if (health > 4)
         {
+            health = 4;
             healthBar[health - 1].GetComponent<Image>().color = Color.white;
-            health++;
         }
+    }
+
+    public void InstaKill()
+    {
+        health = 0;
     }
 }

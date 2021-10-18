@@ -3,14 +3,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Checkpoint : MonoBehaviour
+public class Checkpoint : MonoBehaviour, IHealing
 {
     [SerializeField] private GameObject gameMaster;
+
+    public void HealPlayer(GameObject player)
+    {
+        player.GetComponent<HealthBar>().GainHealth(HealingAmount);
+    }
+
+    public int HealingAmount
+    {
+        get;
+        set;
+    }
     
     // Start is called before the first frame update
     void Start()
     {
-        
+        HealingAmount = 4;
     }
 
     // Update is called once per frame
@@ -26,6 +37,8 @@ public class Checkpoint : MonoBehaviour
             
             Debug.Log("Tagged!");
             gameMaster.GetComponent<PlayerLoad>().Save();
+            
+            HealPlayer(other.gameObject);
         }
     }
 }

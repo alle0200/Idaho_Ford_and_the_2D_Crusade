@@ -44,6 +44,8 @@ public class PlayerMovement : MonoBehaviour
     private bool invincibilityCoroutineStarted = false;
     private bool enemyCoroutineStarted = false;
 
+    [SerializeField] private float abyssPoint;
+
     // Start is called before the first frame update
 
     void Awake()
@@ -70,6 +72,11 @@ public class PlayerMovement : MonoBehaviour
         Jump();
         Crouch();
         Invisible();
+
+        if (transform.position.y < abyssPoint)
+        {
+            GetComponent<HealthBar>().InstaKill();
+        }
     }
 
     void FixedUpdate()

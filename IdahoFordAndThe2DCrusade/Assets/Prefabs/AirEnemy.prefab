@@ -166,7 +166,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyRigidbody: {fileID: 1350107303575120543}
   moveSpeed: 1
-  player: {fileID: 0}
+  player: {fileID: 6703434615464091648, guid: 102ebbd5ded6647f497ddf29e02d1903, type: 3}
   movingRight: 0
   detectionRadius: 4
   minSeconds: 0

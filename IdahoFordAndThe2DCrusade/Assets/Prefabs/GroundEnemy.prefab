@@ -178,7 +178,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyRigidbody: {fileID: 3633133352459617743}
   moveSpeed: 100
-  player: {fileID: 0}
+  player: {fileID: 6703434615464091648, guid: 102ebbd5ded6647f497ddf29e02d1903, type: 3}
   movingRight: 1
   raycastDistance: 1
   enemyPitSensor: {fileID: 3633133350914820574}

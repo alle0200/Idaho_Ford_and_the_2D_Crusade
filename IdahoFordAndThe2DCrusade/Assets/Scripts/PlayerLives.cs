@@ -31,6 +31,7 @@ public class PlayerLives : MonoBehaviour
     public void IncrementLives()
     {
         remainingLives++;
+        gameMaster.GetComponent<PlayerLoad>().SaveLivesOnly();
     }
 
     public int GetRemainingLives()

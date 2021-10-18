@@ -54,8 +54,8 @@ public class PlayerMovement : MonoBehaviour
     void Awake()
     {
         playerRigidbody = GetComponent<Rigidbody2D>();
-        ceilingLayerMask = ~((1 << 3) | (1 << 7));
-        floorLayerMask = ~((1 << 3) | (1 << 7));
+        ceilingLayerMask = ~((1 << 3) | (1 << 7) | (1 << 8));
+        floorLayerMask = ~((1 << 3) | (1 << 7) | (1 << 8));
     }
 
     void Start()
@@ -190,8 +190,8 @@ public class PlayerMovement : MonoBehaviour
         Debug.Log("Invisible");
         Physics2D.IgnoreLayerCollision(3, 6, true);
         Physics2D.IgnoreLayerCollision(3, 7, true);
-        ceilingLayerMask = ~((1 << 3) | (1 << 6) | (1 << 7));
-        floorLayerMask = ~((1 << 3) | (1 << 6) | (1 << 7));
+        ceilingLayerMask = ~((1 << 3) | (1 << 6) | (1 << 7) | (1 << 8));
+        floorLayerMask = ~((1 << 3) | (1 << 6) | (1 << 7) | (1 << 8));
 
         transitionColor = Color.Lerp(GetComponent<SpriteRenderer>().color, ghostColor, ghostColorTransTime);
         ghostColorTransTime += colorTransIncrement * Time.deltaTime;
@@ -211,8 +211,8 @@ public class PlayerMovement : MonoBehaviour
             Physics2D.IgnoreLayerCollision(3, 7, false);
         }
         
-        ceilingLayerMask = ~((1 << 3) | (1 << 7));
-        floorLayerMask = ~((1 << 3) | (1 << 7));
+        ceilingLayerMask = ~((1 << 3) | (1 << 7) | (1 << 8));
+        floorLayerMask = ~((1 << 3) | (1 << 7) | (1 << 8));
             
         transitionColor = Color.Lerp(GetComponent<SpriteRenderer>().color, solidColor, solidColorTransTime);
         solidColorTransTime += colorTransIncrement * Time.deltaTime;

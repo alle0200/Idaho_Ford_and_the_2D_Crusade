@@ -1,1 +1,1 @@
-{"remainingLives":3,"playerLocation":{"x":19.7723713,"y":5.76063442,"z":0.0,"normalized":{"x":0.960082233,"y":0.279717743,"z":0.0,"normalized":{"x":0.9600823,"y":0.279717773,"z":0.0,"magnitude":1.0,"sqrMagnitude":1.0},"magnitude":0.99999994,"sqrMagnitude":0.9999999},"magnitude":20.5944557,"sqrMagnitude":424.131561}}
+{"remainingLives":5,"playerLocation":{"x":0.0,"y":0.0,"z":0.0,"magnitude":0.0,"sqrMagnitude":0.0}}

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
@@ -44,6 +45,8 @@ public class PlayerMovement : MonoBehaviour
     private bool invincibilityCoroutineStarted = false;
     private bool enemyCoroutineStarted = false;
 
+    [SerializeField] private bool movingRight = true;
+
     [SerializeField] private float abyssPoint;
 
     // Start is called before the first frame update
@@ -83,6 +86,9 @@ public class PlayerMovement : MonoBehaviour
     {
         Move();
 
+        bool wasGrounded = isGrounded;
+        isGrounded = false;
+
         // Replace this code so that you can use FloorCheck instead
         // will make it to where only the bottom of the player can check for floor
         
@@ -97,6 +103,11 @@ public class PlayerMovement : MonoBehaviour
         if (Physics2D.OverlapArea(topRightCornerFloorCheck.position, bottomLeftCornerFloorCheck.position, floorLayerMask))
         {
             isGrounded = true;
+            if (!wasGrounded)
+            {
+                // OnLandEvent.Invoke();
+                GetComponent<Animator>().SetBool("isJumping", false);
+            }
         }
         
 
@@ -105,6 +116,7 @@ public class PlayerMovement : MonoBehaviour
             playerRigidbody.AddForce(jumpForce);
             isGrounded = false;
             isJumping = false;
+            GetComponent<Animator>().SetBool("isJumping", true);
         }
     }
 
@@ -123,6 +135,18 @@ public class PlayerMovement : MonoBehaviour
         Vector3 targetVelocity = new Vector3(horizontalMovement, playerRigidbody.velocity.y);
         playerRigidbody.velocity =
             Vector3.SmoothDamp(playerRigidbody.velocity, targetVelocity, ref currentVelocity, maxVelocity);
+
+        if (horizontalMovement > 0 && !movingRight)
+        {
+            TurnAround();
+        }
+        
+        else if (horizontalMovement < 0 && movingRight)
+        {
+            TurnAround();
+        }
+        
+        GetComponent<Animator>().SetFloat("Speed", Mathf.Abs(horizontalMovement));
     }
 
     private void Jump()
@@ -135,6 +159,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Crouch()
     {
+        bool wasCrouching = isCrouching;
+        
         if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Physics2D.OverlapArea(topRightCornerCeilingCheck.position, bottomLeftCornerCeilingCheck.position, ceilingLayerMask) && isGrounded)
         {
             playerHitbox.enabled = false;
@@ -146,6 +172,13 @@ public class PlayerMovement : MonoBehaviour
             // Debug.Log("Not Crouching");
             playerHitbox.enabled = true;
             isCrouching = false;
+        }
+        
+        // GetComponent<Animator>().SetBool("IsCrouching", isCrouching);
+        
+        if (wasCrouching != isCrouching)
+        {
+            GetComponent<Animator>().SetBool("IsCrouching", isCrouching);
         }
     }
 
@@ -300,6 +333,30 @@ public class PlayerMovement : MonoBehaviour
     public void SetPosition(Vector3 newPosition)
     {
         transform.position = newPosition;
+    }
+    
+    // public UnityEvent OnLandEvent;
+    //
+    // public void OnLanding()
+    // {
+    //     GetComponent<Animator>().SetBool("isJumping", false);
+    // }
+    //
+    // public UnityEvent<bool> OnCrouchEvent;
+    //
+    // public void OnCrouching(bool isCrouching)
+    // {
+    //     GetComponent<Animator>().SetBool("IsCrouching", isCrouching);
+    // }
+    
+    public virtual void TurnAround()
+    {
+        movingRight = !movingRight;
+        Vector3 playerScale = transform.localScale;
+        playerScale.x *= -1;
+        transform.localScale = playerScale;
+        
+        Debug.Log("I'm turning around");
     }
 
     private void OnDrawGizmos()

@@ -2052,21 +2052,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6703434615464091648, guid: 102ebbd5ded6647f497ddf29e02d1903, type: 3}
   m_PrefabInstance: {fileID: 6703434616061637490}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1822577527
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1822577519}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26f38575bde8a4001b26021f65c08ff6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  livesCounter: {fileID: 825504861}
-  remainingLives: 3
-  gameMaster: {fileID: 1735913676}
 --- !u!1 &1950991857
 GameObject:
   m_ObjectHideFlags: 0
@@ -2600,10 +2585,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1822577520, guid: 102ebbd5ded6647f497ddf29e02d1903, type: 3}
-      propertyPath: health
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 1822577520, guid: 102ebbd5ded6647f497ddf29e02d1903, type: 3}
       propertyPath: healthBar.Array.data[0]
       value: 
       objectReference: {fileID: 807534512}
@@ -2619,6 +2600,14 @@ PrefabInstance:
       propertyPath: healthBar.Array.data[3]
       value: 
       objectReference: {fileID: 1148288429}
+    - target: {fileID: 1822577527, guid: 102ebbd5ded6647f497ddf29e02d1903, type: 3}
+      propertyPath: gameMaster
+      value: 
+      objectReference: {fileID: 1735913676}
+    - target: {fileID: 1822577527, guid: 102ebbd5ded6647f497ddf29e02d1903, type: 3}
+      propertyPath: livesCounter
+      value: 
+      objectReference: {fileID: 825504861}
     - target: {fileID: 6703434615464091648, guid: 102ebbd5ded6647f497ddf29e02d1903, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -2664,24 +2653,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6703434615464091649, guid: 102ebbd5ded6647f497ddf29e02d1903, type: 3}
-      propertyPath: abyssPoint
-      value: -5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6703434615464091649, guid: 102ebbd5ded6647f497ddf29e02d1903, type: 3}
       propertyPath: ghostSlider
       value: 
       objectReference: {fileID: 1093096258}
-    - target: {fileID: 6703434615464091649, guid: 102ebbd5ded6647f497ddf29e02d1903, type: 3}
-      propertyPath: invisibilityIFrames
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6703434615464091649, guid: 102ebbd5ded6647f497ddf29e02d1903, type: 3}
-      propertyPath: floorLayerMask.m_Bits
-      value: 119
-      objectReference: {fileID: 0}
-    - target: {fileID: 6703434615464091649, guid: 102ebbd5ded6647f497ddf29e02d1903, type: 3}
-      propertyPath: ceilingLayerMask.m_Bits
-      value: 119
+    - target: {fileID: 6703434615464091651, guid: 102ebbd5ded6647f497ddf29e02d1903, type: 3}
+      propertyPath: m_SortingOrder
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6703434615464091677, guid: 102ebbd5ded6647f497ddf29e02d1903, type: 3}
       propertyPath: m_Name

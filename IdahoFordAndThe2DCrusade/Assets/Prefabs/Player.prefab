@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6703434614903957893}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.4, y: -0.49, z: 0}
+  m_LocalPosition: {x: -0.4, y: -0.98, z: 0}
   m_LocalScale: {x: 1, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 6703434615464091648}
@@ -54,7 +54,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6703434615267649608}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.4, y: -0.51, z: 0}
+  m_LocalPosition: {x: 0.4, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 6703434615464091648}
@@ -75,6 +75,8 @@ GameObject:
   - component: {fileID: 6703434615464091654}
   - component: {fileID: 6703434615464091649}
   - component: {fileID: 1822577520}
+  - component: {fileID: 7997383440248873763}
+  - component: {fileID: 1822577527}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -91,7 +93,7 @@ Transform:
   m_GameObject: {fileID: 6703434615464091677}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 2, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6703434615633884034}
   - {fileID: 6703434616070268972}
@@ -141,7 +143,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6df30fde9ccaf49fab3bc4813dfd43d1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -165,18 +167,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.11}
+  m_Offset: {x: 0, y: -0.08190331}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 1, y: 2}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.95, y: 0.75}
+  m_Size: {x: 0.8, y: 1.1338067}
   m_EdgeRadius: 0
 --- !u!58 &6703434615464091650
 CircleCollider2D:
@@ -191,9 +193,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.25}
+  m_Offset: {x: 0, y: -0.5}
   serializedVersion: 2
-  m_Radius: 0.25
+  m_Radius: 0.4
 --- !u!50 &6703434615464091654
 Rigidbody2D:
   serializedVersion: 4
@@ -207,13 +209,13 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 1
+  m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 3
   m_Material: {fileID: 6200000, guid: 926405c1bedfd48e49cc191fae99123f, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 1
+  m_CollisionDetection: 0
   m_Constraints: 4
 --- !u!114 &6703434615464091649
 MonoBehaviour:
@@ -235,12 +237,50 @@ MonoBehaviour:
   jumpForce: {x: 0, y: 720}
   ghostSlider: {fileID: 0}
   colorTransIncrement: 0.3
+  ceilingLayerMask:
+    serializedVersion: 2
+    m_Bits: 119
+  floorLayerMask:
+    serializedVersion: 2
+    m_Bits: 119
   topRightCornerFloorCheck: {fileID: 6703434614903957898}
   bottomLeftCornerFloorCheck: {fileID: 6703434615267649609}
   topRightCornerCeilingCheck: {fileID: 6703434615633884034}
   bottomLeftCornerCeilingCheck: {fileID: 6703434616070268972}
   enemyIFrames: 1.5
-  invisibilityIFrames: 3
+  invisibilityIFrames: 1.5
+  movingRight: 1
+  abyssPoint: -5
+  OnLandEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6703434615464091649}
+        m_TargetAssemblyTypeName: PlayerMovement, Assembly-CSharp
+        m_MethodName: OnLanding
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnCrouchEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6703434615464091649}
+        m_TargetAssemblyTypeName: PlayerMovement, Assembly-CSharp
+        m_MethodName: OnCrouching
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1822577520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -259,6 +299,40 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   health: 4
+--- !u!95 &7997383440248873763
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6703434615464091677}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d94805659f8674662b1a15df7a0cc319, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1822577527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6703434615464091677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26f38575bde8a4001b26021f65c08ff6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  livesCounter: {fileID: 0}
+  remainingLives: 3
+  gameMaster: {fileID: 0}
 --- !u!1 &6703434615633884061
 GameObject:
   m_ObjectHideFlags: 0

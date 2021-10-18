@@ -6,6 +6,7 @@ using UnityEngine;
 public class Checkpoint : MonoBehaviour, IHealing
 {
     [SerializeField] private GameObject gameMaster;
+    [SerializeField] private int healAmount = 2;
 
     public void HealPlayer(GameObject player)
     {
@@ -21,7 +22,7 @@ public class Checkpoint : MonoBehaviour, IHealing
     // Start is called before the first frame update
     void Start()
     {
-        HealingAmount = 4;
+        HealingAmount = healAmount;
     }
 
     // Update is called once per frame

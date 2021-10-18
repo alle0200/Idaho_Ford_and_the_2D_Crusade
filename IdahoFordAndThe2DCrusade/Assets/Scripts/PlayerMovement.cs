@@ -78,6 +78,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (transform.position.y < abyssPoint)
         {
+            playerRigidbody.velocity = Vector2.zero;
             GetComponent<HealthBar>().InstaKill();
         }
     }

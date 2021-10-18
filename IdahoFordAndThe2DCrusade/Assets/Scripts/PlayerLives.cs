@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PlayerLives : MonoBehaviour
@@ -19,6 +20,12 @@ public class PlayerLives : MonoBehaviour
     void Update()
     {
         livesCounter.text = remainingLives + "x";
+
+        if (remainingLives < 0)
+        {
+            gameMaster.GetComponent<PlayerLoad>().Reset();
+            SceneManager.LoadScene("Gameover");
+        }
     }
 
     public void DecrementLives()

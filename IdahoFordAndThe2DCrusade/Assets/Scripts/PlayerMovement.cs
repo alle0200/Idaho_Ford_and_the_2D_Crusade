@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerMovement : Player
+public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D playerRigidbody;
     [SerializeField] private BoxCollider2D playerHitbox;
@@ -21,16 +21,16 @@ public class PlayerMovement : Player
     private bool isInvisible = false;
 
     [SerializeField] private Slider ghostSlider;
-    
+
     private Color ghostColor = new Color(1, 1, 1, 0.5f);
     private Color solidColor = new Color(1, 1, 1, 1);
     private Color transitionColor;
     private float ghostColorTransTime = 0f;
     private float solidColorTransTime = 0f;
     [SerializeField] private float colorTransIncrement = 0.2f;
-    
-    private LayerMask ceilingLayerMask;
-    private LayerMask floorLayerMask;
+
+    [SerializeField] private LayerMask ceilingLayerMask;
+    [SerializeField] private LayerMask floorLayerMask;
 
     [SerializeField] Transform topRightCornerFloorCheck;
     [SerializeField] Transform bottomLeftCornerFloorCheck;
@@ -150,8 +150,8 @@ public class PlayerMovement : Player
         Debug.Log("Invisible");
         Physics2D.IgnoreLayerCollision(3, 6, true);
         Physics2D.IgnoreLayerCollision(3, 7, true);
-        ceilingLayerMask = ~((1 << 3) | (1 << 6));
-        floorLayerMask = ceilingLayerMask;
+        ceilingLayerMask = ~((1 << 3) | (1 << 6) | (1 << 7));
+        floorLayerMask = ~((1 << 3) | (1 << 6) | (1 << 7));
 
         transitionColor = Color.Lerp(GetComponent<SpriteRenderer>().color, ghostColor, ghostColorTransTime);
         ghostColorTransTime += colorTransIncrement * Time.deltaTime;
@@ -165,9 +165,14 @@ public class PlayerMovement : Player
         ghostColorTransTime = 0;
         Debug.Log("Not Invisible");
         Physics2D.IgnoreLayerCollision(3, 6, false);
-        Physics2D.IgnoreLayerCollision(3, 7, false);
-        ceilingLayerMask = ~(1 << 3);
-        floorLayerMask = ceilingLayerMask;
+
+        if (enemyCoroutineStarted == false)
+        {
+            Physics2D.IgnoreLayerCollision(3, 7, false);
+        }
+        
+        ceilingLayerMask = ~((1 << 3) | (1 << 7));
+        floorLayerMask = ~((1 << 3) | (1 << 7));
             
         transitionColor = Color.Lerp(GetComponent<SpriteRenderer>().color, solidColor, solidColorTransTime);
         solidColorTransTime += colorTransIncrement * Time.deltaTime;
@@ -265,9 +270,11 @@ public class PlayerMovement : Player
     IEnumerator EnemyDamage()
     {
         // GetComponent<SpriteRenderer>().color = Color.Lerp(solidColor, Color.red, Mathf.PingPong(Time.time, 1));
-        
+
         Physics2D.IgnoreLayerCollision(3, 7, true);
-        
+
+        // Debug.Log("Layer collision: " + Physics2D.GetIgnoreLayerCollision(3,7));
+
         MakeRed();
         
         GetComponent<HealthBar>().LoseHealth();
@@ -275,10 +282,17 @@ public class PlayerMovement : Player
         yield return new WaitForSeconds(enemyIFrames);
         
         Physics2D.IgnoreLayerCollision(3, 7, false);
+        
+        // Debug.Log("Layer collision: " + Physics2D.GetIgnoreLayerCollision(3,7));
 
         enemyCoroutineStarted = false;
 
         yield return null;
+    }
+
+    public void SetPosition(Vector3 newPosition)
+    {
+        transform.position = newPosition;
     }
 
     private void OnDrawGizmos()

@@ -6,6 +6,7 @@ public class HealthPickup : Interactables , IHealing
 {
     [SerializeField] private int healNumber = 1;
     
+    private bool pickedUp = false;
     public int HealingAmount
     {
         get;
@@ -31,9 +32,10 @@ public class HealthPickup : Interactables , IHealing
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "Player" && pickedUp == false)
         {
             HealPlayer(other.gameObject);
+            pickedUp = true;
             Break();
         }
     }

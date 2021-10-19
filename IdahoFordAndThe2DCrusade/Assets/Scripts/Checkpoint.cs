@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Checkpoint : MonoBehaviour, IHealing
 {
+    private bool checkpointVisited = false;
     [SerializeField] private GameObject gameMaster;
     [SerializeField] private int healAmount = 2;
 
@@ -38,8 +39,13 @@ public class Checkpoint : MonoBehaviour, IHealing
             
             Debug.Log("Tagged!");
             gameMaster.GetComponent<PlayerLoad>().Save();
-            
-            HealPlayer(other.gameObject);
+
+            if (checkpointVisited == false)
+            {
+                HealPlayer(other.gameObject);
+                other.gameObject.GetComponent<PlayerAudio>().PlayCheckpointClip();
+                checkpointVisited = true;
+            }
         }
     }
 }

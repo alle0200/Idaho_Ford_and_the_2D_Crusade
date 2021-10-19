@@ -42,12 +42,14 @@ public class HealthBar : MonoBehaviour
         {
             healthBar[health - 1].GetComponent<Image>().color = Color.black;
             health--;
+            GetComponent<PlayerAudio>().PlayHurtClip();
         }
     }
 
     public void GainHealth(int amount)
     {
         health += amount;
+        // GetComponent<PlayerAudio>().PlayHeartClip();
         
         if (health > 4)
         {

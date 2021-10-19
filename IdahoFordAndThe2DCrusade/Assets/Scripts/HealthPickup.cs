@@ -35,6 +35,7 @@ public class HealthPickup : Interactables , IHealing
         if (other.gameObject.tag == "Player" && pickedUp == false)
         {
             HealPlayer(other.gameObject);
+            other.gameObject.GetComponent<PlayerAudio>().PlayHeartClip();
             pickedUp = true;
             Break();
         }

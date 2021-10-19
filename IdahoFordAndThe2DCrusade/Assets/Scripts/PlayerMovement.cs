@@ -114,7 +114,11 @@ public class PlayerMovement : MonoBehaviour
 
         if (isGrounded && isJumping)
         {
-            playerRigidbody.AddForce(jumpForce);
+            if (playerRigidbody.velocity.y < jumpForce.y)
+            {
+                playerRigidbody.AddForce(jumpForce);
+            }
+            
             isGrounded = false;
             isJumping = false;
             GetComponent<Animator>().SetBool("isJumping", true);
@@ -155,6 +159,7 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
         {
             isJumping = true;
+            GetComponent<PlayerAudio>().PlayJumpClip();
         }
     }
 
@@ -335,21 +340,7 @@ public class PlayerMovement : MonoBehaviour
     {
         transform.position = newPosition;
     }
-    
-    // public UnityEvent OnLandEvent;
-    //
-    // public void OnLanding()
-    // {
-    //     GetComponent<Animator>().SetBool("isJumping", false);
-    // }
-    //
-    // public UnityEvent<bool> OnCrouchEvent;
-    //
-    // public void OnCrouching(bool isCrouching)
-    // {
-    //     GetComponent<Animator>().SetBool("IsCrouching", isCrouching);
-    // }
-    
+
     public virtual void TurnAround()
     {
         movingRight = !movingRight;

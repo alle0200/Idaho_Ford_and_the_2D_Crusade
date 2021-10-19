@@ -23,6 +23,7 @@ public class LivesPickup : Interactables
         if (other.gameObject.tag == "Player" && pickedUp == false)
         {
             other.gameObject.GetComponent<PlayerLives>().IncrementLives();
+            other.gameObject.GetComponent<PlayerAudio>().PlayLifeClip();
             pickedUp = true;
             Break();
         }

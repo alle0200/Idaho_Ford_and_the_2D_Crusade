@@ -38,6 +38,7 @@ public class PlayerLives : MonoBehaviour
     public void IncrementLives()
     {
         remainingLives++;
+        // GetComponent<PlayerAudio>().PlayLifeClip();
         gameMaster.GetComponent<PlayerLoad>().SaveLivesOnly();
     }
 

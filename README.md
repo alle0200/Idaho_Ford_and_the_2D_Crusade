@@ -20,4 +20,5 @@ Known Bugs/Issues:
 Credits:
 - Sound effects from Pokémon FireRed
 - Background music from Monster Tale (https://www.youtube.com/watch?v=W76XUzSiSrA)
+- Font from https://www.fontspace.com/pixel-digivolve-font-f22012
 - Art and animations by Allie Lew

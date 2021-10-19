@@ -5538,14 +5538,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 851808038, guid: 102ebbd5ded6647f497ddf29e02d1903, type: 3}
-      propertyPath: goalClip
-      value: 
-      objectReference: {fileID: 8300000, guid: ae03953bf075b4d7fb308b5fa6bbb5ef, type: 3}
-    - target: {fileID: 851808038, guid: 102ebbd5ded6647f497ddf29e02d1903, type: 3}
-      propertyPath: checkpointClip
-      value: 
-      objectReference: {fileID: 8300000, guid: c7f5236585fe84fbda24add3afbb5d9b, type: 3}
     - target: {fileID: 1822577520, guid: 102ebbd5ded6647f497ddf29e02d1903, type: 3}
       propertyPath: healthBar.Array.data[0]
       value: 

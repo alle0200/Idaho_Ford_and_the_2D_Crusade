@@ -21,7 +21,7 @@ public class PlayerLives : MonoBehaviour
     {
         if (remainingLives < 0)
         {
-            gameMaster.GetComponent<PlayerLoad>().Reset();
+            // gameMaster.GetComponent<PlayerLoad>().Reset();
             SceneManager.LoadScene("Gameover");
         }
         

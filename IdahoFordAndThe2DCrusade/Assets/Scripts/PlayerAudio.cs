@@ -10,6 +10,7 @@ public class PlayerAudio : MonoBehaviour
     [SerializeField] private AudioClip heartClip;
     [SerializeField] private AudioClip lifeClip;
     [SerializeField] private AudioClip checkpointClip;
+    [SerializeField] private AudioClip goalClip;
     
     // Start is called before the first frame update
     void Start()
@@ -56,6 +57,12 @@ public class PlayerAudio : MonoBehaviour
     public void PlayCheckpointClip()
     {
         GetComponent<AudioSource>().clip = checkpointClip;
+        GetComponent<AudioSource>().Play();
+    }
+
+    public void PLayGoalClip()
+    {
+        GetComponent<AudioSource>().clip = goalClip;
         GetComponent<AudioSource>().Play();
     }
     

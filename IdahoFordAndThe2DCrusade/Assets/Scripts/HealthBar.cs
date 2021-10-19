@@ -7,7 +7,9 @@ public class HealthBar : MonoBehaviour
 {
     [SerializeField] public GameObject[] healthBar;
     [SerializeField] private int health = 4;
-    
+
+    private bool isCoroutineRunning = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,18 +24,40 @@ public class HealthBar : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (health <= 0)
+        if (health <= 0 && isCoroutineRunning == false)
         {
             // Debug.Log("Game Over!");
-            GetComponent<PlayerLives>().DecrementLives();
+            StartCoroutine(Pause());
+            isCoroutineRunning = true;
+            // GetComponent<PlayerLives>().DecrementLives();
 
-            health = 4;
+            // health = 4;
         }
 
         for (int i = 0; i <= health - 1; i++)
         {
             healthBar[i].GetComponent<Image>().color = Color.white;
         }
+    }
+
+    IEnumerator Pause()
+    {
+        for (int i = 0; i <= 4 - 1; i++)
+        {
+            healthBar[i].GetComponent<Image>().color = Color.black;
+        }
+        
+        GetComponent<SpriteRenderer>().color = new Color(255, 255, 255, 0);
+        gameObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+        GetComponent<PlayerMovement>().enabled = false;
+        
+        yield return new WaitForSeconds(1);
+        
+        GetComponent<PlayerMovement>().enabled = true;
+        GetComponent<PlayerLives>().DecrementLives();
+        
+        health = 4;
+        isCoroutineRunning = false;
     }
 
     public void LoseHealth()

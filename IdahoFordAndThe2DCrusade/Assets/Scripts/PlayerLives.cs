@@ -19,13 +19,13 @@ public class PlayerLives : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        livesCounter.text = remainingLives + "x";
-
         if (remainingLives < 0)
         {
             gameMaster.GetComponent<PlayerLoad>().Reset();
             SceneManager.LoadScene("Gameover");
         }
+        
+        livesCounter.text = remainingLives + "x";
     }
 
     public void DecrementLives()
